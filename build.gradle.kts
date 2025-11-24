@@ -1,7 +1,7 @@
 plugins {
-    kotlin("jvm") version "2.3.0-RC"
+    kotlin("jvm") version "2.2.21"
+    kotlin("kapt") version "2.2.21"
     id("com.gradleup.shadow") version "8.3.0"
-    id("com.google.devtools.ksp") version "2.2.21-1.0.29"
 }
 
 group = "org.elysian"
@@ -17,7 +17,7 @@ repositories {
 dependencies {
     // Velocity API
     compileOnly("com.velocitypowered:velocity-api:3.3.0-SNAPSHOT")
-    ksp("com.velocitypowered:velocity-api:3.3.0-SNAPSHOT")
+    kapt("com.velocitypowered:velocity-api:3.3.0-SNAPSHOT")
 
     // Kotlin
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
@@ -53,7 +53,6 @@ tasks {
         filteringCharset = "UTF-8"
         duplicatesStrategy = DuplicatesStrategy.WARN
 
-        // Expand variables in velocity-plugin.json
         filesMatching("velocity-plugin.json") {
             expand(props)
         }
@@ -62,7 +61,6 @@ tasks {
     shadowJar {
         archiveClassifier.set("")
 
-        // Relocate dependencies to avoid conflicts
         relocate("redis.clients.jedis", "org.elysian.lib.jedis")
         relocate("com.google.gson", "org.elysian.lib.gson")
         relocate("kotlinx.coroutines", "org.elysian.lib.coroutines")
@@ -70,7 +68,6 @@ tasks {
         relocate("com.moandjiezana.toml", "org.elysian.lib.toml")
         relocate("com.github.lalyos.jfiglet", "org.elysian.lib.jfiglet")
 
-        // Include resources
         from(sourceSets.main.get().resources)
     }
 

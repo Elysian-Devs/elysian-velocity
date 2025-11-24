@@ -5,6 +5,7 @@ import com.velocitypowered.api.proxy.Player
 import com.velocitypowered.api.proxy.server.RegisteredServer
 import org.elysian.velocity.ElysianVelocity
 import org.elysian.velocity.utils.DataSerializer
+import java.time.Duration
 import java.util.UUID
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.ConcurrentHashMap
@@ -22,7 +23,7 @@ class MessageHandler(private val plugin: ElysianVelocity) {
     private val pendingRequests: MutableMap<String, CompletableFuture<Map<String, Any>>> = ConcurrentHashMap()
 
     // Message handlers: MessageType -> Handler function
-    private val handlers: MutableMap<MessageType, MessageHandler> = ConcurrentHashMap()
+    private val handlers: MutableMap<MessageType, MessageHandlerFunction> = ConcurrentHashMap()
 
     init {
         registerDefaultHandlers()
@@ -147,12 +148,12 @@ class MessageHandler(private val plugin: ElysianVelocity) {
 
         // Set timeout
         val timeout = plugin.configManager.getLong("messaging.timeout", 5000)
-        plugin.server.scheduler.buildTask(plugin) {
+        plugin.server.scheduler.buildTask(plugin, Runnable {
             if (!future.isDone) {
                 pendingRequests.remove(requestId)
                 future.complete(null)
             }
-        }.delay(timeout, TimeUnit.MILLISECONDS).schedule()
+        }).delay(Duration.ofMillis(timeout)).schedule()
 
         return future
     }
@@ -199,7 +200,7 @@ class MessageHandler(private val plugin: ElysianVelocity) {
     /**
      * Register message handler
      */
-    fun registerHandler(type: MessageType, handler: MessageHandler) {
+    fun registerHandler(type: MessageType, handler: MessageHandlerFunction) {
         handlers[type] = handler
     }
 
@@ -255,15 +256,11 @@ class MessageHandler(private val plugin: ElysianVelocity) {
      * Start cleanup task for expired pending requests
      */
     private fun startCleanupTask() {
-        plugin.server.scheduler.buildTask(plugin) {
-            val timeout = plugin.configManager.getLong("messaging.timeout", 5000)
-            val now = System.currentTimeMillis()
-
+        plugin.server.scheduler.buildTask(plugin, Runnable {
             pendingRequests.entries.removeIf { (_, future) ->
                 future.isDone || future.isCancelled
             }
-
-        }.repeat(30, TimeUnit.SECONDS).schedule()
+        }).repeat(Duration.ofSeconds(30)).schedule()
     }
 
     /**
@@ -279,7 +276,7 @@ class MessageHandler(private val plugin: ElysianVelocity) {
     /**
      * Message handler functional interface
      */
-    fun interface MessageHandler {
+    fun interface MessageHandlerFunction {
         fun handle(server: RegisteredServer, data: Map<String, Any>)
     }
 

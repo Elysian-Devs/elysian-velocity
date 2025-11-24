@@ -1,27 +1,29 @@
 # ElysianVelocity Configuration
+# Bridge plugin for Elysian network
 
-# ========== General Settings ==========
 general:
-  # Enable debug logging
+  # Enable debug mode for detailed logging
   debug: false
 
-  # Default hub server name
+  # Default hub/lobby server
   hub-server: "lobby"
 
-  # Fallback servers (priority order)
+  # Fallback servers in priority order
   fallback-servers:
     - "lobby"
     - "hub"
 
-# ========== Redis Configuration ==========
-# Redis enables real-time cross-server communication
+# Redis configuration (optional)
 redis:
+  # Enable Redis for cross-server communication
   enabled: false
+
+  # Redis server connection
   host: "localhost"
   port: 6379
   password: ""
 
-  # Redis channels for pub/sub
+  # Redis pub/sub channels
   channels:
     player-data: "elysian:playerdata"
     teleport: "elysian:teleport"
@@ -33,8 +35,7 @@ redis:
     max-idle: 10
     min-idle: 5
 
-# ========== Server Groups ==========
-# Group servers by type for easier management
+# Server groups for easy management
 server-groups:
   lobbies:
     - "lobby"
@@ -42,31 +43,51 @@ server-groups:
 
   survival:
     - "survival"
-    - "survival-2"
 
   creative:
     - "creative"
 
-  minigames:
-    - "skywars"
-    - "bedwars"
+  minigames: []
 
-# ========== Teleportation Settings ==========
+# Teleportation settings
 teleport:
-  # Enable cross-server teleportation
+  # Enable teleportation features
   enabled: true
 
-  # Cooldown in seconds (0 to disable)
+  # Cooldown between teleports (seconds)
   cooldown: 3
 
-  # Teleport delay in seconds (0 for instant)
+  # Delay before teleport (seconds)
   delay: 0
 
-  # Cancel teleport on movement
+  # Cancel teleport if player moves
   cancel-on-move: true
 
-# ========== Messages ==========
+# Plugin messaging settings
+messaging:
+  # Plugin message channel identifier
+  channel: "elysian:main"
+
+  # Request timeout (milliseconds)
+  timeout: 5000
+
+  # Maximum message size (bytes)
+  max-size: 16384
+
+# Performance settings
+performance:
+  # Player cache expiry time (seconds)
+  player-cache-expire: 300
+
+  # Maximum cache size
+  max-cache-size: 10000
+
+  # Message queue size
+  message-queue-size: 1000
+
+# Messages
 messages:
+  # Message prefix
   prefix: "&8[&bElysian&8] &7"
 
   # Server messages
@@ -85,31 +106,7 @@ messages:
   teleport-success: "{prefix}&aTeleported successfully!"
   teleport-failed: "{prefix}&cTeleport failed. Please try again."
 
-  # Error messages
+  # General messages
   no-permission: "{prefix}&cYou don't have permission to do that!"
   player-not-found: "{prefix}&cPlayer not found: &f{player}"
-
-  # Command usage
   usage-server: "{prefix}&eUsage: /server <server-name>"
-
-# ========== Plugin Messaging ==========
-messaging:
-  # Channel identifier for plugin messages
-  channel: "elysian:main"
-
-  # Request timeout in milliseconds
-  timeout: 5000
-
-  # Maximum message size in bytes (16KB default)
-  max-size: 16384
-
-# ========== Performance ==========
-performance:
-  # Cache player data for X seconds
-  player-cache-expire: 300
-
-  # Maximum cached entries
-  max-cache-size: 10000
-
-  # Message queue size
-  message-queue-size: 1000
