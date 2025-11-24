@@ -1,8 +1,8 @@
 {
   "id": "elysianvelocity",
   "name": "ElysianVelocity",
+  "description": "Bridge plugin for Elysian network enabling cross-server communication",
   "version": "${version}",
-  "description": "Bridge plugin for Elysian network - Cross-server communication and player management",
   "url": "https://github.com/Elysian-Devs/elysian-velocity",
   "authors": [
     "nvtmre"
