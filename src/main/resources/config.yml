@@ -1,0 +1,115 @@
+# ElysianVelocity Configuration
+
+# ========== General Settings ==========
+general:
+  # Enable debug logging
+  debug: false
+
+  # Default hub server name
+  hub-server: "lobby"
+
+  # Fallback servers (priority order)
+  fallback-servers:
+    - "lobby"
+    - "hub"
+
+# ========== Redis Configuration ==========
+# Redis enables real-time cross-server communication
+redis:
+  enabled: false
+  host: "localhost"
+  port: 6379
+  password: ""
+
+  # Redis channels for pub/sub
+  channels:
+    player-data: "elysian:playerdata"
+    teleport: "elysian:teleport"
+    broadcast: "elysian:broadcast"
+
+  # Connection pool settings
+  pool:
+    max-total: 20
+    max-idle: 10
+    min-idle: 5
+
+# ========== Server Groups ==========
+# Group servers by type for easier management
+server-groups:
+  lobbies:
+    - "lobby"
+    - "hub"
+
+  survival:
+    - "survival"
+    - "survival-2"
+
+  creative:
+    - "creative"
+
+  minigames:
+    - "skywars"
+    - "bedwars"
+
+# ========== Teleportation Settings ==========
+teleport:
+  # Enable cross-server teleportation
+  enabled: true
+
+  # Cooldown in seconds (0 to disable)
+  cooldown: 3
+
+  # Teleport delay in seconds (0 for instant)
+  delay: 0
+
+  # Cancel teleport on movement
+  cancel-on-move: true
+
+# ========== Messages ==========
+messages:
+  prefix: "&8[&bElysian&8] &7"
+
+  # Server messages
+  server-not-found: "{prefix}&cServer not found: &f{server}"
+  server-offline: "{prefix}&cServer &f{server}&c is currently offline"
+  already-connected: "{prefix}&cYou are already connected to &f{server}"
+  connecting: "{prefix}&aConnecting to &f{server}&a..."
+
+  # Hub messages
+  teleporting-hub: "{prefix}&aTeleporting to hub..."
+  hub-not-configured: "{prefix}&cHub server is not configured"
+
+  # Teleport messages
+  teleport-starting: "{prefix}&aTeleporting in &f{seconds}&a seconds..."
+  teleport-cancelled: "{prefix}&cTeleport cancelled!"
+  teleport-success: "{prefix}&aTeleported successfully!"
+  teleport-failed: "{prefix}&cTeleport failed. Please try again."
+
+  # Error messages
+  no-permission: "{prefix}&cYou don't have permission to do that!"
+  player-not-found: "{prefix}&cPlayer not found: &f{player}"
+
+  # Command usage
+  usage-server: "{prefix}&eUsage: /server <server-name>"
+
+# ========== Plugin Messaging ==========
+messaging:
+  # Channel identifier for plugin messages
+  channel: "elysian:main"
+
+  # Request timeout in milliseconds
+  timeout: 5000
+
+  # Maximum message size in bytes (16KB default)
+  max-size: 16384
+
+# ========== Performance ==========
+performance:
+  # Cache player data for X seconds
+  player-cache-expire: 300
+
+  # Maximum cached entries
+  max-cache-size: 10000
+
+  # Message queue size
+  message-queue-size: 1000
