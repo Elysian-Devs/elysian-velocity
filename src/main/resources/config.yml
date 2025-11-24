@@ -1,14 +1,15 @@
 # ElysianVelocity Configuration
+# Bridge plugin for Elysian network
 
 # ========== General Settings ==========
 general:
-  # Enable debug logging
+  # Enable debug mode for detailed logging
   debug: false
 
-  # Default hub server name
+  # Default hub/lobby server
   hub-server: "lobby"
 
-  # Fallback servers (priority order)
+  # Fallback servers in priority order
   fallback-servers:
     - "lobby"
     - "hub"
@@ -16,7 +17,10 @@ general:
 # ========== Redis Configuration ==========
 # Redis enables real-time cross-server communication
 redis:
+  # Enable Redis for cross-server communication
   enabled: false
+
+  # Redis server connection
   host: "localhost"
   port: 6379
   password: ""
@@ -52,6 +56,7 @@ server-groups:
     - "bedwars"
 
 # ========== Teleportation Settings ==========
+# Teleportation settings
 teleport:
   # Enable cross-server teleportation
   enabled: true
@@ -67,6 +72,7 @@ teleport:
 
 # ========== Messages ==========
 messages:
+  # Message prefix
   prefix: "&8[&bElysian&8] &7"
 
   # Server messages

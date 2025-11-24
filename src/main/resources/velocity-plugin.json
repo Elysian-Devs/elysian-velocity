@@ -1,11 +1,12 @@
 {
   "id": "elysianvelocity",
   "name": "ElysianVelocity",
-  "version": "1.0-SNAPSHOT",
   "description": "Bridge plugin for Elysian network enabling cross-server communication",
+  "version": "${version}",
+  "url": "https://github.com/Elysian-Devs/elysian-velocity",
   "authors": [
     "nvtmre"
   ],
-  "main": "org.elysian.velocity.ElysianVelocity",
-  "dependencies": []
+  "dependencies": [],
+  "main": "org.elysian.velocity.ElysianVelocity"
 }

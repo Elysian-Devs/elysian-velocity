@@ -3,7 +3,6 @@ package org.elysian.velocity.api
 import com.velocitypowered.api.proxy.Player
 import com.velocitypowered.api.proxy.server.RegisteredServer
 import org.elysian.velocity.ElysianVelocity
-import org.elysian.velocity.messaging.MessageType
 import java.util.*
 import java.util.concurrent.CompletableFuture
 
@@ -15,9 +14,15 @@ import java.util.concurrent.CompletableFuture
  * ```kotlin
  * val api = ElysianVelocity.instance.api
  * api.teleportPlayerToServer(player, "survival")
+ * api.messaging.sendToServer(server, channel, data)
  * ```
  */
 class VelocityAPI(private val plugin: ElysianVelocity) {
+
+    /**
+     * Messaging API for cross-server communication
+     */
+    val messaging: MessagingAPI = MessagingAPI(plugin)
 
     // ========== Player Operations ==========
 
@@ -201,52 +206,6 @@ class VelocityAPI(private val plugin: ElysianVelocity) {
      */
     fun getTotalPlayerCount(): Int {
         return plugin.serverManager.getTotalPlayerCount()
-    }
-
-    // ========== Messaging ==========
-
-    /**
-     * Send plugin message to server
-     */
-    fun sendMessageToServer(
-        server: RegisteredServer,
-        channel: String,
-        data: Map<String, Any>
-    ): CompletableFuture<Boolean> {
-        return plugin.messageHandler.sendToServer(server, channel, data)
-    }
-
-    /**
-     * Broadcast plugin message to all servers
-     */
-    fun broadcastMessage(
-        channel: String,
-        data: Map<String, Any>
-    ): CompletableFuture<Int> {
-        return plugin.messageHandler.broadcastToAll(channel, data)
-    }
-
-    /**
-     * Request data from server
-     */
-    fun requestDataFromServer(
-        server: RegisteredServer,
-        dataType: String,
-        params: Map<String, Any> = emptyMap()
-    ): CompletableFuture<Map<String, Any>?> {
-        return plugin.messageHandler.requestData(server, dataType, params)
-    }
-
-    /**
-     * Register custom message handler
-     */
-    fun registerMessageHandler(
-        type: MessageType,
-        handler: (RegisteredServer, Map<String, Any>) -> Unit
-    ) {
-        plugin.messageHandler.registerHandler(type) { server, data ->
-            handler(server, data)
-        }
     }
 
     // ========== Redis Operations ==========

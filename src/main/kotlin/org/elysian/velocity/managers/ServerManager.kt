@@ -2,6 +2,7 @@ package org.elysian.velocity.managers
 
 import com.velocitypowered.api.proxy.server.RegisteredServer
 import org.elysian.velocity.ElysianVelocity
+import java.time.Duration
 import java.util.concurrent.ConcurrentHashMap
 
 /**
@@ -187,12 +188,12 @@ class ServerManager(private val plugin: ElysianVelocity) {
      */
     private fun startStatusMonitor() {
         // Clear old status entries every 5 minutes
-        plugin.server.scheduler.buildTask(plugin) {
+        plugin.server.scheduler.buildTask(plugin, Runnable {
             val now = System.currentTimeMillis()
             serverStatus.entries.removeIf { (_, status) ->
                 now - status.lastCheck > 300000 // 5 minutes
             }
-        }.repeat(java.time.Duration.ofMinutes(5)).schedule()
+        }).repeat(Duration.ofMinutes(5)).schedule()
     }
 
     /**

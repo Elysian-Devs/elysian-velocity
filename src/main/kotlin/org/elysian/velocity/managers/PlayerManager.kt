@@ -2,9 +2,9 @@ package org.elysian.velocity.managers
 
 import com.velocitypowered.api.proxy.Player
 import org.elysian.velocity.ElysianVelocity
+import java.time.Duration
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.TimeUnit
 
 /**
  * Manages player data and cross-server operations
@@ -224,7 +224,7 @@ class PlayerManager(private val plugin: ElysianVelocity) {
      * Start cleanup task for expired data
      */
     private fun startCleanupTask() {
-        plugin.server.scheduler.buildTask(plugin) {
+        plugin.server.scheduler.buildTask(plugin, Runnable {
             val now = System.currentTimeMillis()
             val cacheExpireTime = plugin.configManager.getLong("performance.player-cache-expire", 300) * 1000
 
@@ -249,7 +249,7 @@ class PlayerManager(private val plugin: ElysianVelocity) {
                         "${pendingTeleports.size} pending teleports")
             }
 
-        }.repeat(1, TimeUnit.MINUTES).schedule()
+        }).repeat(Duration.ofMinutes(5)).schedule()
     }
 
     /**
