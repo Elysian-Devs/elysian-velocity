@@ -1,6 +1,7 @@
 package org.elysian.velocity.managers
 
 import org.elysian.velocity.ElysianVelocity
+import java.nio.file.StandardCopyOption
 import org.yaml.snakeyaml.Yaml
 import java.io.File
 import java.io.FileInputStream
@@ -81,16 +82,38 @@ class ConfigManager(
     }
 
     /**
-     * Save default configuration
+     * Save default configuration from resources
      */
+
     private fun saveDefaultConfig() {
         try {
-            config = getDefaultConfig()
-            save()
-            plugin.logger.info("Default configuration created")
+            val resourceStream = plugin.javaClass.getResourceAsStream("/config.yml")
+
+            if (resourceStream != null) {
+                resourceStream.use { input ->
+                    Files.copy(input, configFile.toPath(), StandardCopyOption.REPLACE_EXISTING)
+                    plugin.logger.info("Default configuration created from resources")
+                }
+
+                // Load the copied config
+                FileInputStream(configFile).use { input ->
+                    val loadedConfig = yaml.load<Map<String, Any>>(input)
+                    config = loadedConfig?.toMutableMap() ?: mutableMapOf()
+                }
+            } else {
+                // Fallback - use hardcoded config
+                plugin.logger.warn("config.yml not found in resources, using hardcoded defaults")
+                config = getDefaultConfig()
+                save()
+            }
+
         } catch (e: Exception) {
             plugin.logger.error("Failed to create default configuration: ${e.message}")
             e.printStackTrace()
+
+            // Final fallback
+            config = getDefaultConfig()
+            save()
         }
     }
 
